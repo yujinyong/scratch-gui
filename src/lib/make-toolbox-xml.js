@@ -4,6 +4,26 @@ const categorySeparator = '<sep gap="36"/>';
 
 const blockSeparator = '<sep gap="36"/>'; // At default scale, about 28px
 
+/**
+ * category的属性
+ * --name 类的名称
+ * --id 类的id
+ * --color 在这里插入图片描述设置类icon的填充色，相当于background-color
+ * --secondaryColour 设置类icon的边框色，相当于border-color
+ *
+ * block的属性
+ * --id block的id
+ * --type block的类型，定义了块的语句，形状，参数名
+ *
+ * value的属性（这个在block定义中设置arg参数类型为“input_value"时才有效）
+ * --name 参数名，vm的blocks在定义函数的时候，或在生成代码的时候会用到参数
+ *
+ * shadow的属性（shadow是输出值的块，它块的定义和moton这些类不一样，里面有个output属性来决定是输出number,还是string，outputShape决定了块的形状）
+ * --type 输出块的类型
+ *
+ * field 的属性（设置默认值）
+ * --name 设置参数名
+ */
 /* eslint-disable no-unused-vars */
 const motion = function (isInitialSetup, isStage, targetId) {
     const stageSelected = ScratchBlocks.ScratchMsgs.translate(

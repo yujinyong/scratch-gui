@@ -553,6 +553,7 @@ class Blocks extends React.Component {
             workspaceMetrics,
             ...props
         } = this.props;
+
         /* eslint-enable no-unused-vars */
         return (
             <React.Fragment>
@@ -582,6 +583,7 @@ class Blocks extends React.Component {
                         onRequestClose={onRequestCloseExtensionLibrary}
                     />
                 ) : null}
+                {/* 自制积木 */}
                 {customProceduresVisible ? (
                     <CustomProcedures
                         options={{

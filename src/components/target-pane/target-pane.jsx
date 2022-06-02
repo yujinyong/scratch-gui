@@ -51,7 +51,7 @@ const TargetPane = ({
         className={styles.targetPane}
         {...componentProps}
     >
-
+        {/* 角色 */}
         <SpriteSelectorComponent
             editingTarget={editingTarget}
             hoveredTarget={hoveredTarget}
@@ -78,6 +78,7 @@ const TargetPane = ({
             onSpriteUpload={onSpriteUpload}
             onSurpriseSpriteClick={onSurpriseSpriteClick}
         />
+        {/* 舞台背景 */}
         <div className={styles.stageSelectorWrapper}>
             {stage.id && <StageSelector
                 asset={

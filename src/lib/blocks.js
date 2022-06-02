@@ -1,11 +1,21 @@
 import ScratchBlocks from 'scratch-blocks';
 
+import blockSvg from './blocks-core/block_svg';
+
+blockSvg(ScratchBlocks);
+
 /**
  * Connect scratch blocks with the vm
  * @param {VirtualMachine} vm - The scratch vm
  * @return {ScratchBlocks} ScratchBlocks connected with the vm
  */
 export default function (vm) {
+
+    /**
+     * message0：表示块里显示的字符串，%1,%2表示块里的字段field,块里有1个field是%1，有两个field是按先后顺序设为%1,%2,以此类推
+     * args0:里面的数组元素对应上面设置的field,args0[0]对应%1，args0[1]对应%2，…。每个元素对象表示设置了的field的类型
+     * extensions："colours_motion"设置块的颜色，"shape_statement"设置了块的形状
+     */
 
     const jsonForMenuBlock = function (name, menuOptionsFn, colors, start) {
         return {

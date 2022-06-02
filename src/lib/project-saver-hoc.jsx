@@ -77,6 +77,8 @@ const ProjectSaverHOC = function (WrappedComponent) {
             if (this.props.projectChanged && !prevProps.projectChanged) {
                 this.scheduleAutoSave();
             }
+            // 点击保存作品时，保存作品源代码、素材
+            // 条件已在点击保存作品时判断过：已登录、不是其他用户的作品、内容已变更
             if (this.props.isUpdating && !prevProps.isUpdating) {
                 this.updateProjectToStorage();
             }
