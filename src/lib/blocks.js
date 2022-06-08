@@ -3,7 +3,7 @@ import ScratchBlocks from 'scratch-blocks';
 import blockSvg from './blocks-core/block_svg';
 
 blockSvg(ScratchBlocks);
-
+window.ScratchBlocks = ScratchBlocks;
 /**
  * Connect scratch blocks with the vm
  * @param {VirtualMachine} vm - The scratch vm
@@ -12,10 +12,16 @@ blockSvg(ScratchBlocks);
 export default function (vm) {
 
     /**
-     * message0：表示块里显示的字符串，%1,%2表示块里的字段field,块里有1个field是%1，有两个field是按先后顺序设为%1,%2,以此类推
-     * args0:里面的数组元素对应上面设置的field,args0[0]对应%1，args0[1]对应%2，…。每个元素对象表示设置了的field的类型
-     * extensions："colours_motion"设置块的颜色，"shape_statement"设置了块的形状
+     * 自定义积木模型
+     * @param {string} message0 表示块里显示的字符串，%1,%2表示块里的字段field,块里有1个field是%1，有两个field是按先后顺序设为%1,%2,以此类推
+     * @param {Array} args0 里面的数组元素对应上面设置的field,args0[0]对应%1，args0[1]对应%2，…。每个元素对象表示设置了的field的类型
+     * @param {string} category 设置块的类别
+     * @param {Array} extensions 拓展[颜色, 块类型]："colours_motion"设置块的颜色，"shape_statement"设置了块的形状
+     * @returns {{extensions, message0, category, args0}} 返回积木配置对象
      */
+    const jsonForLabelBlock = function (message0, args0, category, extensions) {
+        return {message0, args0, category, extensions};
+    };
 
     const jsonForMenuBlock = function (name, menuOptionsFn, colors, start) {
         return {
@@ -162,6 +168,18 @@ export default function (vm) {
     const controlColors = ScratchBlocks.Colours.control;
 
     const eventColors = ScratchBlocks.Colours.event;
+
+    ScratchBlocks.Blocks.myDemo_1 = {};
+
+    ScratchBlocks.Blocks.myDemo_1.init = function () {
+        const json = jsonForLabelBlock(
+            '移动demo %1',
+            [{type: 'input_value', name: 'TO'}],
+            'myDemos',
+            ['colours_motion', 'shape_statement']
+        );
+        this.jsonInit(json);
+    };
 
     ScratchBlocks.Blocks.sound_sounds_menu.init = function () {
         const json = jsonForMenuBlock('SOUND_MENU', soundsMenu, soundColors, []);

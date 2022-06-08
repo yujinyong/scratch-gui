@@ -734,25 +734,37 @@ const myBlocks = function () {
     </category>
     `;
 };
+
+const myDemos = function () {
+    return `
+    <category name="我的Demo" id="myDemo" colour="#4C97FF" secondaryColour="#3373CC">
+        <block type="myDemo_1">
+            <value name="TO">
+                <shadow type="motion_goto_menu">
+                </shadow>
+            </value>
+        </block>
+    </category>
+    `;
+};
+
+
 /* eslint-enable no-unused-vars */
 
 const xmlOpen = '<xml style="display: none">';
 const xmlClose = '</xml>';
 
 /**
- * @param {!boolean} isInitialSetup - Whether the toolbox is for initial setup. If the mode is "initial setup",
- * blocks with localized default parameters (e.g. ask and wait) should not be loaded. (LLK/scratch-gui#5445)
- * @param {?boolean} isStage - Whether the toolbox is for a stage-type target. This is always set to true
- * when isInitialSetup is true.
- * @param {?string} targetId - The current editing target
- * @param {?Array.<object>} categoriesXML - optional array of `{id,xml}` for categories. This can include both core
- * and other extensions: core extensions will be placed in the normal Scratch order; others will go at the bottom.
- * @property {string} id - the extension / category ID.
- * @property {string} xml - the `<category>...</category>` XML for this extension / category.
- * @param {?string} costumeName - The name of the default selected costume dropdown.
- * @param {?string} backdropName - The name of the default selected backdrop dropdown.
- * @param {?string} soundName -  The name of the default selected sound dropdown.
- * @returns {string} - a ScratchBlocks-style XML document for the contents of the toolbox.
+ * @param {!boolean} isInitialSetup - 工具箱是否用于初始设置。如果模式是 "初始设置"，则不应该加载具有本地化默认参数的块（例如ask和wait）。(LLK/scratch-gui#5445)
+ * @param {?boolean} isStage - 该工具箱是否为阶段型目标。当isInitialSetup为真时，这总是被设置为真。
+ * @param {?string} targetId - 当前的编辑目标
+ * @param {?Array.<object>} categoriesXML - `{id,xml}`的可选数组，用于分类。这可以包括核心和其他扩展：核心扩展将被放在正常的Scratch顺序中；其他扩展将放在底部。
+ * @property {string} id - 扩展/类别ID。
+ * @property {string} xml - `<category>...<category>`这个扩展/类别的XML。
+ * @param {?string} costumeName - 默认选择的服装下拉列表的名称。
+ * @param {?string} backdropName - 默认选择的背景下拉菜单的名称。
+ * @param {?string} soundName -  默认选择的声音下拉菜单的名称。
+ * @returns {string} - 一个ScratchBlocks风格的XML文档，用于描述工具箱的内容。
  */
 const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categoriesXML = [],
     costumeName = '', backdropName = '', soundName = '') {
@@ -782,6 +794,7 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
     const operatorsXML = moveCategory('operators') || operators(isInitialSetup, isStage, targetId);
     const variablesXML = moveCategory('data') || variables(isInitialSetup, isStage, targetId);
     const myBlocksXML = moveCategory('procedures') || myBlocks(isInitialSetup, isStage, targetId);
+    const myDemoXML = moveCategory('demo1') || myDemos(isInitialSetup, isStage, targetId);
 
     const everything = [
         xmlOpen,
@@ -793,7 +806,8 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
         sensingXML, gap,
         operatorsXML, gap,
         variablesXML, gap,
-        myBlocksXML
+        myBlocksXML, gap,
+        myDemoXML
     ];
 
     for (const extensionCategory of categoriesXML) {

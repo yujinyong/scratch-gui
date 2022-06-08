@@ -617,8 +617,7 @@ class MenuBar extends React.Component {
                     </div>
                 </div>
 
-                {/* show the proper UI in the account menu, given whether the user is
-                logged in, and whether a session is available to log in with */}
+                {/* 在账户菜单中显示适当的用户界面，考虑到用户是否已经登录，以及是否有一个会话可以用来登录 */}
                 <div className={styles.accountInfoGroup}>
                     <div className={styles.menuBarItem}>
                         {this.props.canSave && (
