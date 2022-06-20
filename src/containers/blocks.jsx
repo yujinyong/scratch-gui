@@ -96,6 +96,7 @@ class Blocks extends React.Component {
             this.props.options,
             {rtl: this.props.isRtl, toolbox: this.props.toolboxXML}
         );
+        // 这里会先使用默认的toolboxXml初始化一次，后面再根据getToolboxXML返回的xml更新
         this.workspace = this.ScratchBlocks.inject(this.blocks, workspaceConfig);
 
         // Register buttons under new callback keys for creating variables,
@@ -130,6 +131,8 @@ class Blocks extends React.Component {
         addFunctionListener(this.workspace, 'translate', this.onWorkspaceMetricsChange);
         addFunctionListener(this.workspace, 'zoom', this.onWorkspaceMetricsChange);
 
+
+        // 更新toolboxXml，也就是getToolboxXML返回的xml
         this.attachVM();
         // Only update blocks/vm locale when visible to avoid sizing issues
         // If locale changes while not visible it will get handled in didUpdate
@@ -155,9 +158,8 @@ class Blocks extends React.Component {
             this.ScratchBlocks.hideChaff();
         }
 
-        // Only rerender the toolbox when the blocks are visible and the xml is
-        // different from the previously rendered toolbox xml.
-        // Do not check against prevProps.toolboxXML because that may not have been rendered.
+        // 只有当块是可见的并且xml与之前渲染的工具箱xml不同时，才重新渲染工具箱。
+        // 不要检查prevProps.toolboxXML，因为它可能没有被渲染过。
         if (this.props.isVisible && this.props.toolboxXML !== this._renderedToolboxXML) {
             this.requestToolboxUpdate();
         }
@@ -238,7 +240,7 @@ class Blocks extends React.Component {
     }
 
     withToolboxUpdates (fn) {
-        // if there is a queued toolbox update, we need to wait
+        // 如果有一个排队的工具箱更新，我们需要等待
         if (this.toolboxUpdateTimeout) {
             this.toolboxUpdateQueue.push(fn);
         } else {
@@ -258,6 +260,7 @@ class Blocks extends React.Component {
         this.props.vm.addListener('BLOCK_GLOW_ON', this.onBlockGlowOn);
         this.props.vm.addListener('BLOCK_GLOW_OFF', this.onBlockGlowOff);
         this.props.vm.addListener('VISUAL_REPORT', this.onVisualReport);
+        // 通过vm.emit触发事件
         this.props.vm.addListener('workspaceUpdate', this.onWorkspaceUpdate);
         this.props.vm.addListener('targetsUpdate', this.onTargetsUpdate);
         this.props.vm.addListener('MONITORS_UPDATE', this.handleMonitorsUpdate);
@@ -304,8 +307,8 @@ class Blocks extends React.Component {
     onWorkspaceMetricsChange () {
         const target = this.props.vm.editingTarget;
         if (target && target.id) {
-            // Dispatch updateMetrics later, since onWorkspaceMetricsChange may be (very indirectly)
-            // called from a reducer, i.e. when you create a custom procedure.
+            // 稍后调度 updateMetrics，因为 onWorkspaceMetricsChange 可能会（非常间接地）被
+            // 从reducer中调用，即当你创建一个自定义过程时。
             // TODO: Is this a vehement hack?
             setTimeout(() => {
                 this.props.updateMetrics({
@@ -333,9 +336,9 @@ class Blocks extends React.Component {
         this.workspace.reportValue(data.id, data.value);
     }
     getToolboxXML () {
-        // Use try/catch because this requires digging pretty deep into the VM
-        // Code inside intentionally ignores several error situations (no stage, etc.)
-        // Because they would get caught by this try/catch
+        // 使用 try/catch，因为这需要对虚拟机进行相当深入的挖掘
+        // 里面的代码故意忽略了几种错误情况（没有阶段，等等）。
+        // 因为它们会被这个try/catch所捕获。
         try {
             let {editingTarget: target, runtime} = this.props.vm;
             const stage = runtime.getTargetForStage();
@@ -354,8 +357,9 @@ class Blocks extends React.Component {
             return null;
         }
     }
+    // 更新工作空间(包括toolboxXml)
     onWorkspaceUpdate (data) {
-        // When we change sprites, update the toolbox to have the new sprite's blocks
+        // 当我们改变sprites时，更新工具箱，使其拥有新sprites的区块
         const toolboxXML = this.getToolboxXML();
         if (toolboxXML) {
             this.props.updateToolboxState(toolboxXML);
@@ -395,9 +399,9 @@ class Blocks extends React.Component {
             this.workspace.resize();
         }
 
-        // Clear the undo state of the workspace since this is a
-        // fresh workspace and we don't want any changes made to another sprites
-        // workspace to be 'undone' here.
+        // 清除工作区的撤销状态，因为这是一个新的工作区。
+        // 因为这是一个新的工作区，我们不希望对另一个精灵所做的任何改变在这里被 "撤销"。
+        // 撤消 "的工作区。
         this.workspace.clearUndo();
     }
     handleMonitorsUpdate (monitors) {
@@ -434,9 +438,9 @@ class Blocks extends React.Component {
 
                 this.ScratchBlocks.defineBlocksWithJsonArray(staticBlocksJson);
                 dynamicBlocksInfo.forEach(blockInfo => {
-                    // This is creating the block factory / constructor -- NOT a specific instance of the block.
-                    // The factory should only know static info about the block: the category info and the opcode.
-                    // Anything else will be picked up from the XML attached to the block instance.
+                    // 这是在创建区块工厂/构造器，而不是区块的具体实例。
+                    // 工厂应该只知道该块的静态信息：类别信息和操作码。
+                    // 其他的信息将从连接到块实例的XML中获取。
                     const extendedOpcode = `${categoryInfo.id}_${blockInfo.info.opcode}`;
                     const blockDefinition =
                         defineDynamicBlock(this.ScratchBlocks, categoryInfo, blockInfo, extendedOpcode);
@@ -445,8 +449,8 @@ class Blocks extends React.Component {
             }
         };
 
-        // scratch-blocks implements a menu or custom field as a special kind of block ("shadow" block)
-        // these actually define blocks and MUST run regardless of the UI state
+        // scratch-blocks将菜单或自定义字段作为一种特殊的块（"阴影 "块）来实现。
+        // 这些实际上是对块的定义，并且必须在不考虑UI状态的情况下运行。
         defineBlocks(
             Object.getOwnPropertyNames(categoryInfo.customFieldTypes)
                 .map(fieldTypeName => categoryInfo.customFieldTypes[fieldTypeName].scratchBlocksDefinition));

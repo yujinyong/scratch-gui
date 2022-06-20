@@ -3,13 +3,14 @@ import ScratchBlocks from 'scratch-blocks';
 import blockSvg from './blocks-core/block_svg';
 
 blockSvg(ScratchBlocks);
-window.ScratchBlocks = ScratchBlocks;
 /**
  * Connect scratch blocks with the vm
  * @param {VirtualMachine} vm - The scratch vm
  * @return {ScratchBlocks} ScratchBlocks connected with the vm
  */
 export default function (vm) {
+    window.ScratchBlocks = ScratchBlocks;
+    window.VM = vm;
 
     /**
      * 自定义积木模型

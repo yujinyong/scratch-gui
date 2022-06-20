@@ -37,7 +37,7 @@ const STAGE_DISPLAY_SIZES = keyMirror({
     small: null
 });
 
-// zoom level to start with
+// 开始的缩放级别
 const BLOCKS_DEFAULT_SCALE = 0.675;
 
 const STAGE_DISPLAY_SCALES = {};
