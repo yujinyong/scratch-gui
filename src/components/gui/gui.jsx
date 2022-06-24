@@ -9,6 +9,7 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import tabStyles from 'react-tabs/style/react-tabs.css';
 import VM from 'scratch-vm';
 import Renderer from 'scratch-render';
+import ScratchBlocks from 'scratch-blocks';
 
 import Blocks from '../../containers/blocks.jsx';
 import CostumeTab from '../../containers/costume-tab.jsx';
@@ -33,12 +34,33 @@ import TelemetryModal from '../telemetry-modal/telemetry-modal.jsx';
 
 import layout, {STAGE_SIZE_MODES} from '../../lib/layout-constants';
 import {resolveStageSize} from '../../lib/screen-utils';
+import blockSvg from '../../lib/blocks-core/block_svg';
 
 import styles from './gui.css';
 import addExtensionIcon from './icon--extensions.svg';
 import codeIcon from './icon--code.svg';
 import costumesIcon from './icon--costumes.svg';
 import soundsIcon from './icon--sounds.svg';
+
+blockSvg(ScratchBlocks);
+
+// 生成代码
+const generatorCode = function () {
+    window.ScratchBlocks = ScratchBlocks;
+    window.VM = VM;
+
+    const codelabGenerator = new ScratchBlocks.Generator('JSON');
+
+    codelabGenerator.PRECEDENCE = 0;
+
+    codelabGenerator.motion_movesteps = function (block) {
+        const textValue = block.getFieldValue('TEXT');
+        const code = `"${textValue}"`;
+        return [code, codelabGenerator.PRECEDENCE];
+    };
+
+    codelabGenerator.workspaceToCode();
+};
 
 const messages = defineMessages({
     addExtension: {

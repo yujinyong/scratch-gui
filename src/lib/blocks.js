@@ -1,17 +1,11 @@
 import ScratchBlocks from 'scratch-blocks';
 
-import blockSvg from './blocks-core/block_svg';
-
-blockSvg(ScratchBlocks);
 /**
  * Connect scratch blocks with the vm
  * @param {VirtualMachine} vm - The scratch vm
  * @return {ScratchBlocks} ScratchBlocks connected with the vm
  */
 export default function (vm) {
-    window.ScratchBlocks = ScratchBlocks;
-    window.VM = vm;
-
     /**
      * 自定义积木模型
      * @param {string} message0 表示块里显示的字符串，%1,%2表示块里的字段field,块里有1个field是%1，有两个field是按先后顺序设为%1,%2,以此类推
